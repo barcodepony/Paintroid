@@ -43,8 +43,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Locale;
 import java.util.Objects;
+import id.zelory.compressor.*;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
@@ -90,8 +93,16 @@ public final class FileIO {
 	}
 
 	public static Uri saveBitmapToUri(Uri uri, ContentResolver resolver, Bitmap bitmap) throws IOException {
-		OutputStream outputStream = resolver.openOutputStream(uri);
-
+		//OutputStream outputStream = resolver.openOutputStream(uri);
+		URI u = null;
+		try {
+			u = new URI(uri.toString());
+		} catch (URISyntaxException e) {
+			//e.printStackTrace();
+		}
+		File f = new File(u);
+		UtilKt.saveBitmap(bitmap, f, FileIO.compressFormat, 100);
+/*
 		if (outputStream == null) {
 			throw new IllegalArgumentException("Can not open uri.");
 		}
@@ -100,7 +111,7 @@ public final class FileIO {
 		} finally {
 			outputStream.close();
 		}
-
+		*/
 		return uri;
 	}
 
