@@ -2,6 +2,7 @@ package org.catrobat.paintroid.test.espresso;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -31,9 +32,14 @@ import java.util.Objects;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
+import android.content.Context;
+import androidx.test.core.app.ApplicationProvider;
+
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.
+		assertTrue;
+import org.catrobat.paintroid.MainActivity;
 
 public class FileFromOtherSourceIntegrationTest {
 
@@ -50,8 +56,14 @@ public class FileFromOtherSourceIntegrationTest {
 
 	private ContentResolver resolver;
 
+	private MainActivity mainActivity;
+
+
+
 	@Before
 	public void setUp() {
+		mainActivity = launchActivityRule.getActivity();
+		FileIO.Companion.setContext(mainActivity);
 		onToolBarView().performSelectTool(ToolType.BRUSH);
 		deletionFileList = new ArrayList<>();
 		resolver = launchActivityRule.getActivity().getContentResolver();
@@ -62,9 +74,8 @@ public class FileFromOtherSourceIntegrationTest {
 		Intent intent = new Intent();
 		Uri receivedUri = createTestImageFile();
 		Bitmap receivedBitmap = null;
-
 		try {
-			receivedBitmap = FileIO.getBitmapFromUri(resolver, receivedUri);
+			receivedBitmap = FileIO.Companion.getBitmapFromUri(resolver, receivedUri);
 		} catch (Exception e) {
 			Log.e("Can't read", "Can't get Bitmap from File");
 		}
@@ -83,7 +94,6 @@ public class FileFromOtherSourceIntegrationTest {
 		Bundle intentBundle = intent.getExtras();
 		Objects.requireNonNull(intentBundle);
 		Uri intentUri = (Uri) intentBundle.get(Intent.EXTRA_STREAM);
-
 		String mainActivityIntentAction = mainActivityIntent.getAction();
 		String mainActivityIntentType = mainActivityIntent.getType();
 		Bundle mainActivityIntentBundle = mainActivityIntent.getExtras();
@@ -93,7 +103,7 @@ public class FileFromOtherSourceIntegrationTest {
 		Objects.requireNonNull(mainActivityIntentUri);
 
 		try {
-			mainActivityIntentBitmap = FileIO.getBitmapFromUri(resolver, mainActivityIntentUri);
+			mainActivityIntentBitmap = FileIO.Companion.getBitmapFromUri(resolver, mainActivityIntentUri);
 		} catch (Exception e) {
 			Log.e("Can't read", "Can't get Bitmap from File");
 		}
@@ -117,6 +127,7 @@ public class FileFromOtherSourceIntegrationTest {
 	}
 
 	private Uri createTestImageFile() {
+		FileIO.Companion.setContext(mainActivity);
 		Bitmap bitmap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888);
 
 		ContentValues contentValues = new ContentValues();

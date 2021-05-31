@@ -178,7 +178,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	private void showSecurityQuestionBeforeExit() {
-		if ((isImageUnchanged() || model.isSaved()) && (!model.isOpenedFromCatroid() || !FileIO.wasImageLoaded)) {
+		if ((isImageUnchanged() || model.isSaved()) && (!model.isOpenedFromCatroid() || !FileIO.getWasImageLoaded())) {
 			finishActivity();
 		} else if (model.isOpenedFromCatroid()) {
 			saveBeforeFinish();
@@ -307,11 +307,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		DisplayMetrics metrics = view.getDisplayMetrics();
 		resetPerspectiveAfterNextCommand = true;
 		model.setSavedPictureUri(null);
-		FileIO.filename = "image";
-		FileIO.uriFileJpg = null;
-		FileIO.uriFilePng = null;
-		FileIO.currentFileNameJpg = null;
-		FileIO.currentFileNamePng = null;
+		FileIO.setFilename("image");
+		FileIO.setUriFileJpg(null);
+		FileIO.setUriFilePng(null);
+		FileIO.setCurrentFileNameJpg(null);
+		FileIO.setCurrentFileNamePng(null);
 		Command initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels);
 		commandManager.setInitialStateCommand(initCommand);
 		commandManager.reset();
@@ -398,7 +398,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	private void checkforDefaultFilename() {
 		String standard = "image" + getImageNumber();
-		if (FileIO.filename.equals(standard)) {
+		if (FileIO.getFilename().equals(standard)) {
 			countUpImageNumber();
 		}
 	}
@@ -558,7 +558,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void initializeFromCleanState(String extraPicturePath, String extraPictureName) {
 		boolean isOpenedFromCatroid = extraPicturePath != null;
 		model.setOpenedFromCatroid(isOpenedFromCatroid);
-		FileIO.wasImageLoaded = false;
+		FileIO.setWasImageLoaded(false);
 		if (isOpenedFromCatroid) {
 			File imageFile = new File(extraPicturePath);
 			if (imageFile.exists()) {
@@ -742,7 +742,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 					model.setSavedPictureUri(null);
 				}
 				model.setCameraImageUri(null);
-				FileIO.wasImageLoaded = true;
+				FileIO.setWasImageLoaded(true);
 				break;
 			case LOAD_IMAGE_IMPORTPNG:
 				if (toolController.getToolType() == ToolType.IMPORTPNG) {

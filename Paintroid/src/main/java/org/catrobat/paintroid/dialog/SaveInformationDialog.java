@@ -64,20 +64,20 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 
 	public static SaveInformationDialog newInstance(int permissionCode, int imageNumber, boolean isStandard) {
 		if (isStandard) {
-			FileIO.isCatrobatImage = false;
-			FileIO.filename = "image";
-			FileIO.compressFormat = Bitmap.CompressFormat.JPEG;
-			FileIO.ending = ".jpg";
-			FileIO.compressQuality = 100;
+			FileIO.setCatrobatImage(false);
+			FileIO.setFilename("image");
+			FileIO.setCompressFormat(Bitmap.CompressFormat.JPEG);
+			FileIO.setEnding(".jpg");
+			FileIO.setCompressQuality(100);
 		}
 
 		SaveInformationDialog dialog = new SaveInformationDialog();
 		Bundle bundle = new Bundle();
 
-		if (FileIO.filename.equals("image")) {
-			bundle.putString("setName", FileIO.filename + imageNumber);
+		if (FileIO.getFilename().equals("image")) {
+			bundle.putString("setName", FileIO.getFilename() + imageNumber);
 		} else {
-			bundle.putString("setName", FileIO.filename);
+			bundle.putString("setName", FileIO.getFilename());
 		}
 
 		bundle.putInt("permission", permissionCode);
@@ -101,9 +101,9 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 		initializeViews(view);
 		initializeFunctioning();
 
-		if (FileIO.isCatrobatImage) {
+		if (FileIO.isCatrobatImage()) {
 			mySpinner.setSelection(2);
-		} else if (FileIO.compressFormat == Bitmap.CompressFormat.PNG) {
+		} else if (FileIO.getCompressFormat() == Bitmap.CompressFormat.PNG) {
 			mySpinner.setSelection(1);
 		} else {
 			mySpinner.setSelection(0);
@@ -125,9 +125,9 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 		builder.setPositiveButton(R.string.save_button_text, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				FileIO.filename = imageName.getText().toString();
+				FileIO.setFilename(imageName.getText().toString());
 
-				if (permission != PERMISSION_EXTERNAL_STORAGE_SAVE_COPY && FileIO.checkIfDifferentFile(FileIO.getDefaultFileName()) != Constants.IS_NO_FILE) {
+				if (permission != PERMISSION_EXTERNAL_STORAGE_SAVE_COPY && FileIO.Companion.checkIfDifferentFile(FileIO.Companion.getDefaultFileName()) != Constants.IS_NO_FILE) {
 					getPresenter().showOverwriteDialog(permission);
 				} else {
 					getPresenter().switchBetweenVersions(permission);
@@ -169,10 +169,10 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mySpinner.setAdapter(adapter);
 
-		String percentageString = Integer.toString(FileIO.compressQuality);
+		String percentageString = Integer.toString(FileIO.getCompressQuality());
 		percentage.setText(percentageString);
 		imageName.setText(setName);
-		mySeekbar.setProgress(FileIO.compressQuality);
+		mySeekbar.setProgress(FileIO.getCompressQuality());
 
 		mySeekbar.setOnSeekBarChangeListener(this);
 		mySpinner.setOnItemSelectedListener(this);
@@ -180,9 +180,9 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 		informationButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (FileIO.isCatrobatImage) {
+				if (FileIO.isCatrobatImage()) {
 					getPresenter().showOraInformationDialog();
-				} else if (FileIO.compressFormat == Bitmap.CompressFormat.JPEG) {
+				} else if (FileIO.getCompressFormat() == Bitmap.CompressFormat.JPEG) {
 					getPresenter().showJpgInformationDialog();
 				} else {
 					getPresenter().showPngInformationDialog();
@@ -199,21 +199,21 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 			case "jpg":
 				specificFormatLayout.removeAllViews();
 				specificFormatLayout.addView(jpgView);
-				FileIO.compressFormat = Bitmap.CompressFormat.JPEG;
-				FileIO.isCatrobatImage = false;
-				FileIO.ending = ".jpg";
+				FileIO.setCompressFormat(Bitmap.CompressFormat.JPEG);
+				FileIO.setCatrobatImage(false);
+				FileIO.setEnding(".jpg");
 				break;
 			case "png":
 				specificFormatLayout.removeAllViews();
-				FileIO.compressFormat = Bitmap.CompressFormat.PNG;
-				FileIO.isCatrobatImage = false;
-				FileIO.ending = ".png";
+				FileIO.setCompressFormat(Bitmap.CompressFormat.PNG);
+				FileIO.setCatrobatImage(false);
+				FileIO.setEnding(".png");
 				break;
 			case "ora":
 				specificFormatLayout.removeAllViews();
-				FileIO.compressFormat = Bitmap.CompressFormat.PNG;
-				FileIO.isCatrobatImage = true;
-				FileIO.ending = ".ora";
+				FileIO.setCompressFormat(Bitmap.CompressFormat.PNG);
+				FileIO.setCatrobatImage(true);
+				FileIO.setEnding(".ora");
 				break;
 		}
 	}
@@ -226,7 +226,7 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		String stringToInsert = progress + "%";
 		percentage.setText(stringToInsert);
-		FileIO.compressQuality = progress;
+		FileIO.setCompressQuality(progress);
 	}
 
 	@Override

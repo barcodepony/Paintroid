@@ -183,7 +183,7 @@ public class OpenedFromPocketCodeWithImageTest {
 
 	private File getNewImageFile(String filename) {
 		try {
-			return FileIO.createNewEmptyPictureFile(filename, launchActivityRule.getActivity());
+			return FileIO.Companion.createNewEmptyPictureFile(filename, launchActivityRule.getActivity());
 		} catch (NullPointerException e) {
 			throw new AssertionError("Could not create temp file", e);
 		}

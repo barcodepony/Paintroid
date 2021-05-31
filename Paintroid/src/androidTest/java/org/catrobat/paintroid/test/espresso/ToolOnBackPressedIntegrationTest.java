@@ -152,8 +152,8 @@ public class ToolOnBackPressedIntegrationTest {
 		saveFile = new File(pathToFile);
 
 		launchActivityRule.getActivity().model.setSavedPictureUri(Uri.fromFile(saveFile));
-		FileIO.currentFileNamePng = Constants.TEMP_PICTURE_NAME + FILE_ENDING;
-		FileIO.uriFilePng = Uri.fromFile(saveFile);
+		FileIO.setCurrentFileNamePng(Constants.TEMP_PICTURE_NAME + FILE_ENDING);
+		FileIO.setUriFilePng(Uri.fromFile(saveFile));
 		long oldFileSize = saveFile.length();
 
 		onDrawingSurfaceView()

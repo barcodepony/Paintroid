@@ -46,7 +46,7 @@ public class CreateFileAsync extends AsyncTask<Void, Void, File> {
 	protected File doInBackground(Void... voids) {
 		CreateFileCallback callback = callbackRef.get();
 		try {
-			return FileIO.createNewEmptyPictureFile(filename, callback.getFileActivity());
+			return FileIO.Companion.createNewEmptyPictureFile(filename, callback.getFileActivity());
 		} catch (NullPointerException e) {
 			Log.e(TAG, "Can't create file", e);
 		}

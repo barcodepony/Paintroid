@@ -434,7 +434,7 @@ public class MenuFileActivityIntegrationTest {
 
 	@Test
 	public void testCheckImageNumberIncrementAfterSaveWithStandardName() {
-		FileIO.filename = "image";
+		FileIO.setFilename("image");
 		int imageNumber = launchActivityRule.getActivity().getPresenter().getImageNumber();
 
 		onTopBarView()

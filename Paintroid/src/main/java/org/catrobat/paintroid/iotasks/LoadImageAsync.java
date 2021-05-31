@@ -72,7 +72,7 @@ public class LoadImageAsync extends AsyncTask<Void, Void, BitmapReturnValue> {
 
 		try {
 			ContentResolver resolver = callback.getContentResolver();
-			FileIO.filename = "image";
+			FileIO.setFilename("image");
 
 			String mimeType;
 			if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
@@ -87,9 +87,9 @@ public class LoadImageAsync extends AsyncTask<Void, Void, BitmapReturnValue> {
 				returnValue = OpenRasterFileFormatConversion.importOraFile(resolver, uri, context);
 			} else {
 				if (scaleImage) {
-					returnValue = FileIO.getScaledBitmapFromUri(resolver, uri, context);
+					returnValue = FileIO.Companion.getScaledBitmapFromUri(resolver, uri, context);
 				} else {
-					returnValue = FileIO.getBitmapFromUri(resolver, uri, context);
+					returnValue = FileIO.Companion.getBitmapFromUri(resolver, uri, context);
 				}
 			}
 

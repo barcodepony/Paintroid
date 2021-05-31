@@ -55,7 +55,7 @@ public class StampCommand extends BaseCommand {
 	public void run(Canvas canvas, LayerContracts.Model layerModel) {
 
 		if (fileToStoredBitmap != null) {
-			bitmap = FileIO.getBitmapFromFile(fileToStoredBitmap);
+			bitmap = FileIO.Companion.getBitmapFromFile(fileToStoredBitmap);
 		}
 
 		if (bitmap == null) {

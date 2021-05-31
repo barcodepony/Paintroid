@@ -210,7 +210,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 
 	@Override
 	public void startShareImageActivity(Bitmap bitmap) {
-		Uri uri = FileIO.saveBitmapToCache(bitmap, mainActivity);
+		Uri uri = FileIO.Companion.saveBitmapToCache(bitmap, mainActivity);
 		if (uri != null) {
 			Intent shareIntent = new Intent();
 			shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
@@ -399,25 +399,25 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showSaveImageInformationDialogWhenStandalone(int permissionCode, int imageNumber, boolean isExport) {
 		Uri uri = mainActivity.model.getSavedPictureUri();
 		if (uri != null && permissionCode != PERMISSION_EXTERNAL_STORAGE_SAVE_COPY) {
-			FileIO.parseFileName(uri, mainActivity.getContentResolver());
+			FileIO.Companion.parseFileName(uri, mainActivity.getContentResolver());
 		}
 
 		if (!isExport && mainActivity.model.isOpenedFromCatroid()) {
 			String name = getFileName(uri);
 			if (name != null && (name.endsWith("jpg") || name.endsWith("jpeg"))) {
-				FileIO.compressFormat = Bitmap.CompressFormat.JPEG;
-				FileIO.ending = ".jpg";
+				FileIO.setCompressFormat(Bitmap.CompressFormat.JPEG);
+				FileIO.setEnding(".jpg");
 			} else if (name != null && name.endsWith("png")) {
-				FileIO.compressFormat = Bitmap.CompressFormat.PNG;
-				FileIO.ending = ".png";
+				FileIO.setCompressFormat(Bitmap.CompressFormat.PNG);
+				FileIO.setEnding(".png");
 			} else {
-				FileIO.compressFormat = Bitmap.CompressFormat.PNG;
-				FileIO.ending = ".png";
+				FileIO.setCompressFormat(Bitmap.CompressFormat.PNG);
+				FileIO.setEnding(".png");
 			}
-			FileIO.filename = "image" + imageNumber;
+			FileIO.setFilename("image" + imageNumber);
 
-			FileIO.catroidFlag = true;
-			FileIO.isCatrobatImage = false;
+			FileIO.setCatroidFlag(true);
+			FileIO.setCatrobatImage(false);
 			mainActivity.getPresenter().switchBetweenVersions(permissionCode);
 			return;
 		}

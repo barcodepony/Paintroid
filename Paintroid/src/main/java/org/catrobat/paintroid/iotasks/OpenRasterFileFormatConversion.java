@@ -254,7 +254,7 @@ public final class OpenRasterFileFormatConversion {
 
 		while (current != null) {
 			if (current.getName().matches("data/(.*).png")) {
-				Bitmap layerBitmap = FileIO.enableAlpha(BitmapFactory.decodeStream(zipInput, null, options));
+				Bitmap layerBitmap = FileIO.Companion.enableAlpha(BitmapFactory.decodeStream(zipInput, null, options));
 				bitmapList.add(layerBitmap);
 			}
 			current = zipInput.getNextEntry();

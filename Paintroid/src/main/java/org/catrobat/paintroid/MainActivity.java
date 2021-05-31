@@ -81,6 +81,7 @@ import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -164,7 +165,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 		getAppFragment();
 		PaintroidApplication.cacheDir = getCacheDir();
-
 		setContentView(R.layout.activity_pocketpaint_main);
 
 		onCreateGlobals();
@@ -178,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		String receivedAction = receivedIntent.getAction();
 		String receivedType = receivedIntent.getType();
 
+
 		if (receivedAction != null && receivedType != null && (receivedAction.equals(Intent.ACTION_SEND) || receivedAction.equals(Intent.ACTION_EDIT)) && receivedType.startsWith("image/")) {
 			Uri receivedUri = receivedIntent
 					.getParcelableExtra(Intent.EXTRA_STREAM);
@@ -190,8 +191,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			Bitmap receivedBitmap = null;
 
 			try {
-				FileIO.filename = "image";
-				receivedBitmap = FileIO.getBitmapFromUri(getContentResolver(), receivedUri);
+				FileIO.setFilename("image");
+				receivedBitmap =  FileIO.Companion.getBitmapFromUri(getContentResolver(), receivedUri);
 			} catch (IOException e) {
 				Log.e("Can not read", "Unable to retrieve Bitmap from Uri");
 			}
@@ -221,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		}
 
 		commandManager.addCommandListener(this);
-
+		FileIO.Companion.setContext(this);
 		presenter.finishInitialize();
 	}
 

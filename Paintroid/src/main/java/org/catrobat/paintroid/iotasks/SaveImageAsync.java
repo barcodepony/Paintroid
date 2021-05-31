@@ -67,10 +67,10 @@ public class SaveImageAsync extends AsyncTask<Void, Void, Uri> {
 		if (callback != null && !callback.isFinishing()) {
 			try {
 				Bitmap bitmap = workspace.getBitmapOfAllLayers();
-				String fileName = FileIO.getDefaultFileName();
-				int fileExistsValue = FileIO.checkIfDifferentFile(fileName);
+				String fileName = FileIO.Companion.getDefaultFileName();
+				int fileExistsValue = FileIO.Companion.checkIfDifferentFile(fileName);
 
-				if (FileIO.isCatrobatImage) {
+				if (FileIO.isCatrobatImage()) {
 					List<Bitmap> bitmapList = workspace.getBitmapLisOfAllLayers();
 
 					if (uri != null && fileExistsValue == Constants.IS_ORA) {
@@ -79,26 +79,27 @@ public class SaveImageAsync extends AsyncTask<Void, Void, Uri> {
 					} else {
 						Uri imageUri = OpenRasterFileFormatConversion.exportToOraFile(bitmapList, fileName, bitmap, callback.getContentResolver());
 
-						FileIO.currentFileNameOra = fileName;
-						FileIO.uriFileOra = imageUri;
+						FileIO.setCurrentFileNameOra(fileName);
+						FileIO.setUriFileOra(imageUri);
 
 						return imageUri;
 					}
 				} else {
-					if (uri != null && FileIO.catroidFlag) {
-						return FileIO.saveBitmapToUri(uri, callback.getContentResolver(), bitmap);
+					if (uri != null && FileIO.getCatroidFlag()) {
+
+						return FileIO.Companion.saveBitmapToUri(uri, callback.getContentResolver(), bitmap);
 					} else if (uri != null && fileExistsValue != Constants.IS_NO_FILE) {
 						setUriToFormatUri(fileExistsValue);
-						return FileIO.saveBitmapToUri(uri, callback.getContentResolver(), bitmap);
+						return FileIO.Companion.saveBitmapToUri(uri, callback.getContentResolver(), bitmap);
 					} else {
-						Uri imageUri = FileIO.saveBitmapToFile(fileName, bitmap, callback.getContentResolver());
+						Uri imageUri = FileIO.Companion.saveBitmapToFile(fileName, bitmap, callback.getContentResolver());
 
-						if (FileIO.ending.equals(".png")) {
-							FileIO.currentFileNamePng = fileName;
-							FileIO.uriFilePng = imageUri;
+						if (FileIO.getEnding().equals(".png")) {
+							FileIO.setCurrentFileNamePng(fileName);
+							FileIO.setUriFilePng(imageUri);
 						} else {
-							FileIO.currentFileNameJpg = fileName;
-							FileIO.uriFileJpg = imageUri;
+							FileIO.setCurrentFileNameJpg(fileName);
+							FileIO.setUriFileJpg(imageUri);
 						}
 
 						return imageUri;
@@ -114,16 +115,16 @@ public class SaveImageAsync extends AsyncTask<Void, Void, Uri> {
 
 	private void setUriToFormatUri(int formatcode) {
 		if (formatcode == Constants.IS_JPG) {
-			if (FileIO.uriFileJpg != null) {
-				uri = FileIO.uriFileJpg;
+			if (FileIO.getUriFileJpg() != null) {
+				uri = FileIO.getUriFileJpg();
 			}
 		} else if (formatcode == Constants.IS_PNG) {
-			if (FileIO.uriFilePng != null) {
-				uri = FileIO.uriFilePng;
+			if (FileIO.getUriFilePng() != null) {
+				uri = FileIO.getUriFilePng();
 			}
 		} else {
-			if (FileIO.uriFileOra != null) {
-				uri = FileIO.uriFileOra;
+			if (FileIO.getUriFileOra() != null) {
+				uri = FileIO.getUriFileOra();
 			}
 		}
 	}
